@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 });
 
-Route::get('/reports', [ReportUpload::class, 'index']);
+Route::get('/reports', [ReportUpload::class, 'index']); //getting data in database
 
-Route::post('/reports-upload', [ReportUpload::class, 'store']);
+Route::post('/reports-upload', [ReportUpload::class, 'store']); // storing data in database
