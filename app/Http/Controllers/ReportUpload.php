@@ -43,7 +43,7 @@ class ReportUpload extends Controller
             return response()->json(['message' => 'Report created successfully', 'report' => $report], 201);
         } catch (\Exception $e) {
             Log::error('Error storing report: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to store report'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
