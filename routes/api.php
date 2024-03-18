@@ -23,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/reports', [ReportUpload::class, 'index']); //getting data in database
 
 Route::post('/reports-upload', [ReportUpload::class, 'store']); // storing data in database
+
+Route::get('/reports/{id}', [ReportUpload::class, 'show']);//single selected data

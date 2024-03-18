@@ -16,10 +16,7 @@ return new class extends Migration
             $table->string('dateofreport');
             $table->string('reporttype');
             $table->string('vesselname');
-            $table->string('dateofoccurence');
-            $table->string('location');
             $table->string('departmentinvolved');
-            $table->string('activityattimeofnearmiss');
             $table->string('description');
             $table->string('rank');
             $table->string('name');
