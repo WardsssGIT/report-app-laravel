@@ -38,7 +38,7 @@ class ReportUpload extends Controller
                 'name' => $request->name,
             );
 
-            $report = UploadReport::create($validatedData);
+            $report = UploadReport::create($report);
 
             return response()->json(['message' => 'Report created successfully', 'report' => $report], 201);
         } catch (\Exception $e) {
