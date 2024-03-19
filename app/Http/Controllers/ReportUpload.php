@@ -57,4 +57,48 @@ class ReportUpload extends Controller
             return response()->json(['error' => 'Report not found'], 404);
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $report = UploadReport::findOrFail($id);
+
+            $validatedData = $request->validate([
+                'dateofreport' => 'required',
+                'reporttype' => 'required',
+                'vesselname' => 'required',
+                'departmentinvolved' => 'required',
+                'description' => 'required',
+                'rank' => 'required',
+                'name' => 'required',
+            ]);
+
+            $report->update([
+                'dateofreport' => $request->dateofreport,
+                'reporttype' => $request->reporttype,
+                'vesselname' => $request->vesselname,
+                'departmentinvolved' => $request->departmentinvolved,
+                'description' => $request->description,
+                'rank' => $request->rank,
+                'name' => $request->name,
+            ]);
+
+            return response()->json(['message' => 'Report updated successfully', 'report' => $report]);
+        } catch (\Exception $e) {
+            Log::error('Error updating report: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $report = UploadReport::findOrFail($id);
+            $report->delete();
+            return response()->json(['message' => 'Report deleted successfully']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting report: ' . $e->getMessage());
+            return response()->json(['error' => 'Report not found'], 404);
+        }
+    }
 }

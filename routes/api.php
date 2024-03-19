@@ -25,3 +25,8 @@ Route::get('/reports', [ReportUpload::class, 'index']); //getting data in databa
 Route::post('/reports-upload', [ReportUpload::class, 'store']); // storing data in database
 
 Route::get('/reports/{id}', [ReportUpload::class, 'show']);//single selected data
+
+Route::put('/reports/{id}', [ReportUpload::class, 'update']); //update sindle selected data
+
+Route::delete('/reports/{id}', [ReportUpload::class,'destroy']);// deleting data
+
