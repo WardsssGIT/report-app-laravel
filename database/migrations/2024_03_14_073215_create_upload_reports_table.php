@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('rank');
             $table->string('name');
+            $table->string('active');
             $table->timestamps();
         });
     }

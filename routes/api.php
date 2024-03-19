@@ -30,3 +30,4 @@ Route::put('/reports/{id}', [ReportUpload::class, 'update']); //update sindle se
 
 Route::delete('/reports/{id}', [ReportUpload::class,'destroy']);// deleting data
 
+Route::put('/reports/archive/{id}', [ReportUpload::class, 'archive']);//data archive

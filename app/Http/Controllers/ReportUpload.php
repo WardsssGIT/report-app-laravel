@@ -10,10 +10,10 @@ class ReportUpload extends Controller
 {
     public function index()
     {
-        $reports = UploadReport::all();
-
+        $reports = UploadReport::where('active', true)->get();
         return response()->json($reports);
     }
+    
 
     public function store(Request $request)
     {
@@ -28,15 +28,8 @@ class ReportUpload extends Controller
                 'name' => 'required',
             ]);
 
-            $report = array(
-                'dateofreport'=> $request->dateofreport,
-                'reporttype'=> $request->reporttype,
-                'vesselname'=> $request->vesselname,
-                'departmentinvolved'=> $request->departmentinvolved,
-                'description'=> $request->description,
-                'rank' => $request->rank,
-                'name' => $request->name,
-            );
+            $report = $request->all();
+            $report['active'] = true; // By default, new reports are active
 
             $report = UploadReport::create($report);
 
@@ -73,15 +66,7 @@ class ReportUpload extends Controller
                 'name' => 'required',
             ]);
 
-            $report->update([
-                'dateofreport' => $request->dateofreport,
-                'reporttype' => $request->reporttype,
-                'vesselname' => $request->vesselname,
-                'departmentinvolved' => $request->departmentinvolved,
-                'description' => $request->description,
-                'rank' => $request->rank,
-                'name' => $request->name,
-            ]);
+            $report->update($request->all());
 
             return response()->json(['message' => 'Report updated successfully', 'report' => $report]);
         } catch (\Exception $e) {
@@ -90,14 +75,14 @@ class ReportUpload extends Controller
         }
     }
 
-    public function destroy($id)
+    public function archive($id)
     {
         try {
             $report = UploadReport::findOrFail($id);
-            $report->delete();
-            return response()->json(['message' => 'Report deleted successfully']);
+            $report->update(['active' => false]); // Set the report as archived
+            return response()->json(['message' => 'Report archived successfully']);
         } catch (\Exception $e) {
-            Log::error('Error deleting report: ' . $e->getMessage());
+            Log::error('Error archiving report: ' . $e->getMessage());
             return response()->json(['error' => 'Report not found'], 404);
         }
     }

@@ -17,5 +17,10 @@ class UploadReport extends Model
         'description',
         'rank',
         'name',
+        'active',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
     ];
 }
