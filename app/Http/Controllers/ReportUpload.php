@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UploadReport;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 
 class ReportUpload extends Controller
@@ -86,4 +87,17 @@ class ReportUpload extends Controller
             return response()->json(['error' => 'Report not found'], 404);
         }
     }
+
+    function generate_pdf($data)
+    {
+        try {
+            // Upload Data
+            $report_data = UploadReport::find($data);
+            $pdf = PDF::loadView('pdf-template', compact('report_data'));
+            return $pdf->stream();
+        } catch (\Throwable $th) {
+            return response(['error' => $th->getMessage()], 500);
+        }
+    }
 }
+
