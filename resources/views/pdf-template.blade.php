@@ -99,23 +99,19 @@
             </tr>
             <tr>
                 <th>Date of Report</th>
-                <td>{{$report_data->dateofreport}}</td>
+                <td>{{$report_data->Date_of_report}}</td>
             </tr>
             <tr>
                 <th>Report Name</th>
-                <td>{{$report_data->vesselname}}</td>
+                <td>{{$report_data->Report_name}}</td>
+            </tr>
+            <tr>
+                <th>Report Type</th>
+                <td>{{$report_data->Report_type}}</td>
             </tr>
             <tr>
                 <th>Department Involved</th>
-                <td>{{$report_data->departmentinvolved}}</td>
-            </tr>
-            <tr>
-                <th>Position</th>
-                <td>{{$report_data->rank}}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{$report_data->name}}</td>
+                <td>{{$report_data->Department_involved}}</td>
             </tr>
         </table>
     </div>
@@ -125,7 +121,7 @@
         <h2 style="color: #333; text-align: center;">Description</h2>
         <table class="description">
             <tr>
-                <td>{{$report_data->description}}</td>
+                <td>{{$report_data->Description}}</td>
             </tr>
         </table>
     </div>
