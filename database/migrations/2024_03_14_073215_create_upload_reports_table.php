@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('reporttype');
             $table->string('vesselname');
             $table->string('departmentinvolved');
-            $table->string('description');
+            $table->text('description'); // Change to 'text' data type
             $table->string('rank');
             $table->string('name');
             $table->string('active');
@@ -33,3 +32,4 @@ return new class extends Migration
         Schema::dropIfExists('upload_reports');
     }
 };
+

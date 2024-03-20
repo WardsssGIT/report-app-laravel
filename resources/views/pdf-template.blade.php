@@ -33,16 +33,15 @@
             text-align: left;
         }
 
-         /*fronttext*/
         th {
-            background-color: #f2f2f2;
+            background-color: #2E8B57; /* Dark Sea Green */
             font-weight: bold;
-            color: #333;
+            color: #fff; /* White */
+            border-radius: 5px 0 0 5px;
         }
 
-        /*backtext*/
         td {
-            background-color: #fff;
+            background-color: #F0FFF0; /* Honeydew */
             color: #555;
         }
 
@@ -50,11 +49,49 @@
             text-align: center;
             color: #333;
         }
+
+        .description-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .description {
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .description th {
+            vertical-align: bottom;
+        }
+
+        .description td {
+            word-wrap: break-word;
+            max-width: 100%;
+            white-space: pre-wrap; /* Allows text to wrap */
+        }
+
+        /* Modern Button Style */
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Report Details</h1>
+        <h1 style="color: #2E8B57;">Report Details</h1>
         <table>
             <tr>
                 <th>ID</th>
@@ -73,16 +110,22 @@
                 <td>{{$report_data->departmentinvolved}}</td>
             </tr>
             <tr>
-                <th>Description</th>
-                <td>{{$report_data->description}}</td>
-            </tr>
-            <tr>
                 <th>Position</th>
                 <td>{{$report_data->rank}}</td>
             </tr>
             <tr>
                 <th>Name</th>
                 <td>{{$report_data->name}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Description Section -->
+    <div class="description-container">
+        <h2 style="color: #333; text-align: center;">Description</h2>
+        <table class="description">
+            <tr>
+                <td>{{$report_data->description}}</td>
             </tr>
         </table>
     </div>
