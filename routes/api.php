@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportUpload;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,10 @@ Route::delete('/reports/{id}', [ReportUpload::class,'destroy']);// deleting data
 Route::put('/reports/archive/{id}', [ReportUpload::class, 'archive']);//data archive
 
 Route::get('/reports/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']);//pdf
+
+// Authentication routes
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/logout', [AuthController::class, 'logout']);

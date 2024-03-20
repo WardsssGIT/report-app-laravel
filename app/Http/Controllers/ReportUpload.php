@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UploadReport;
+use App\Models\Report_table;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +11,7 @@ class ReportUpload extends Controller
 {
     public function index()
     {
-        $reports = UploadReport::where('active', true)->get();
+        $reports = Report_table::where('is_Active', true)->get();
         return response()->json($reports);
     }
     
@@ -20,31 +20,31 @@ class ReportUpload extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'dateofreport' => 'required',
-                'reporttype' => 'required',
-                'vesselname' => 'required',
-                'departmentinvolved' => 'required',
-                'description' => 'required',
-                'rank' => 'required',
-                'name' => 'required',
+                'Date_of_report' => 'required',
+                'Report_type' => 'required',
+                'Report_name' => 'required',
+                'Department_involved' => 'required',
+                'Description' => 'required',
+                'is_Active' => '1',
+                
             ]);
-
-            $report = $request->all();
-            $report['active'] = true; // By default, new reports are active
-
-            $report = UploadReport::create($report);
-
+            // Add Report_status_active with default value true
+            $validatedData['is_Active'] = true;
+    
+            $report = Report_table::create($validatedData);
+    
             return response()->json(['message' => 'Report created successfully', 'report' => $report], 201);
         } catch (\Exception $e) {
             Log::error('Error storing report: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
 
     public function show($id)
     {
         try {
-            $report = UploadReport::findOrFail($id);
+            $report = Report_table::findOrFail($id);
             return response()->json(['report' => $report]);
         } catch (\Exception $e) {
             Log::error('Error fetching report: ' . $e->getMessage());
@@ -55,16 +55,15 @@ class ReportUpload extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $report = UploadReport::findOrFail($id);
+            $report = Report_table::findOrFail($id);
 
             $validatedData = $request->validate([
-                'dateofreport' => 'required',
-                'reporttype' => 'required',
-                'vesselname' => 'required',
-                'departmentinvolved' => 'required',
-                'description' => 'required',
-                'rank' => 'required',
-                'name' => 'required',
+                'Date_of_report' => 'required',
+                'Report_type' => 'required',
+                'Report_name' => 'required',
+                'Department_involved' => 'required',
+                'Description' => 'required',
+                
             ]);
 
             $report->update($request->all());
@@ -79,8 +78,8 @@ class ReportUpload extends Controller
     public function archive($id)
     {
         try {
-            $report = UploadReport::findOrFail($id);
-            $report->update(['active' => false]); // Set the report as archived
+            $report = Report_table::findOrFail($id);
+            $report->update(['Report_status_active' => false]); // Set the report as archived
             return response()->json(['message' => 'Report archived successfully']);
         } catch (\Exception $e) {
             Log::error('Error archiving report: ' . $e->getMessage());
@@ -92,7 +91,7 @@ class ReportUpload extends Controller
     {
         try {
             // Upload Data
-            $report_data = UploadReport::find($data);
+            $report_data = Report_table::find($data);
             $pdf = PDF::loadView('pdf-template', compact('report_data'));
             return $pdf->stream();
         } catch (\Throwable $th) {
