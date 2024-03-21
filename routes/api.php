@@ -35,6 +35,8 @@ Route::put('/reports/archive/{id}', [ReportUpload::class, 'archive']);//data arc
 
 Route::get('/reports/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']);//pdf
 
+Route::post('/report/{id}/approve', [ReportUpload::class, 'approve_report']);// approving report
+
 // Authentication routes
 Route::post('/login', [AuthController::class, 'login']);
 

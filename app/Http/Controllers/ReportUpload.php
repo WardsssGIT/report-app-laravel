@@ -79,13 +79,31 @@ class ReportUpload extends Controller
     {
         try {
             $report = Report_table::findOrFail($id);
-            $report->update(['Report_status_active' => false]); // Set the report as archived
+            $report->update(['is_Active' => false]); // Set the report as archived
             return response()->json(['message' => 'Report archived successfully']);
         } catch (\Exception $e) {
             Log::error('Error archiving report: ' . $e->getMessage());
             return response()->json(['error' => 'Report not found'], 404);
         }
     }
+
+    public function approve_report(Request $request, $id){
+        try {
+            $user_id = $request->user()->id;
+            $report = Report_table::findOrFail($id);
+            $report->update([
+                'User_verify_id'=>$user_id,
+                'Report_status'=>'Approve'
+            ]);
+
+            return response()->json(['message'=> 'Report Approved Success']);
+        } catch (\Exception $e) {
+            Log::error('Error approving report'. $e->getMessage());
+            return response()->json(['error'=> $e->getMessage()], 500);
+    }
+}
+
+   
 
     function generate_pdf($data)
     {
