@@ -14,20 +14,24 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->only('email', 'password');
-
+    
             if (Auth::attempt($credentials)) {
                 $user = User::where('email', $request->email)->first();
                 $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json(['token' => $token]);
+                return response()->json([
+                    'user' => $user,
+                    'token' => $token,
+                ]);
             }
-
-            return response()->json(['error' => 'Unauthorized'], 401);
+    
+            return response()->json(['error' => 'Unauthorized', 'token' => null], 401);
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
             Log::error('Login failed: ' . $errorMessage);
-            return response()->json(['error' => $errorMessage], 500);
+            return response()->json(['error' => $errorMessage, 'token' => null], 500);
         }
     }
+
 
     public function register(Request $request)
     {
@@ -65,12 +69,25 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->currentAccessToken()->delete();
-            return response()->json(['message' => 'Logged out']);
+            // Retrieve the authenticated user
+            $user = $request->user();
+
+            // Check if the user is authenticated
+            if ($user) {
+                // Delete the user's current access token
+                $user->currentAccessToken()->delete();
+                return response()->json(['message' => 'Logged out']);
+            } else {
+                // If the user is not authenticated, return a 401 Unauthorized response
+                return response()->json(['message' => 'No user to log out'], 401);
+            }
         } catch (\Exception $e) {
+            // If an exception occurs, log the error and return a 500 Internal Server Error response
             $errorMessage = $e->getMessage();
             Log::error('Logout failed: ' . $errorMessage);
             return response()->json(['error' => $errorMessage], 500);
         }
     }
+
+    
 }

@@ -11,11 +11,15 @@ class ReportUpload extends Controller
 {
     public function index()
     {
-        $reports = Report_table::where('is_Active', true)->get();
-        return response()->json($reports);
+        try {
+            $reports = Report_table::where('is_Active', true)->get();
+            return response()->json($reports);
+        } catch (\Exception $e) {
+            Log::error('Error fetching reports: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to fetch reports'], 500);
+        }
     }
     
-
     public function store(Request $request)
     {
         try {
@@ -26,7 +30,6 @@ class ReportUpload extends Controller
                 'Department_involved' => 'required',
                 'Description' => 'required',
                 'is_Active' => '1',
-                
             ]);
             // Add Report_status_active with default value true
             $validatedData['is_Active'] = true;
@@ -40,7 +43,6 @@ class ReportUpload extends Controller
         }
     }
     
-
     public function show($id)
     {
         try {
@@ -63,7 +65,6 @@ class ReportUpload extends Controller
                 'Report_name' => 'required',
                 'Department_involved' => 'required',
                 'Description' => 'required',
-                
             ]);
 
             $report->update($request->all());
@@ -87,34 +88,33 @@ class ReportUpload extends Controller
         }
     }
 
-    public function approve_report(Request $request, $id){
+    public function approve_report(Request $request, $id)
+    {
         try {
             $user_id = $request->user()->id;
             $report = Report_table::findOrFail($id);
             $report->update([
-                'User_verify_id'=>$user_id,
-                'Report_status'=>'Approve'
+                'User_verify_id' => $user_id,
+                'Report_status' => 'Approve'
             ]);
 
             return response()->json(['message'=> 'Report Approved Success']);
         } catch (\Exception $e) {
             Log::error('Error approving report'. $e->getMessage());
             return response()->json(['error'=> $e->getMessage()], 500);
+        }
     }
-}
 
-   
-
-    function generate_pdf($data)
+    public function generate_pdf($data)
     {
         try {
             // Upload Data
             $report_data = Report_table::find($data);
-            $pdf = PDF::loadView('pdf-template', compact('report_data'));
+            $pdf = Pdf::loadView('pdf-template', compact('report_data'));
             return $pdf->stream();
         } catch (\Throwable $th) {
-            return response(['error' => $th->getMessage()], 500);
+            Log::error('Error generating PDF: ' . $th->getMessage());
+            return response(['error' => 'Failed to generate PDF'], 500);
         }
     }
 }
-
