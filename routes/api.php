@@ -28,7 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reports-upload', [ReportUpload::class, 'store']); // Route to upload a report
     Route::get('/reports/{id}', [ReportUpload::class, 'show']); // Route to get a single report by ID
     Route::put('/reports/{id}', [ReportUpload::class, 'update']); // Route to update a report by ID
-    Route::delete('/reports/{id}', [ReportUpload::class, 'destroy']); // Route to delete a report by ID
     Route::put('/reports/archive/{id}', [ReportUpload::class, 'archive']); // Route to archive a report by ID
     Route::get('/reports/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']); // Route to generate PDF for a report by ID
     Route::post('/report/{id}/approve', [ReportUpload::class, 'approve_report']); // Route to approve a report by ID
