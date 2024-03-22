@@ -11,26 +11,27 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     public function login(Request $request)
-    {
-        try {
-            $credentials = $request->only('email', 'password');
-    
-            if (Auth::attempt($credentials)) {
-                $user = User::where('email', $request->email)->first();
-                $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json([
-                    'user' => $user,
-                    'token' => $token,
-                ]);
-            }
-    
-            return response()->json(['error' => 'Unauthorized', 'token' => null], 401);
-        } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            Log::error('Login failed: ' . $errorMessage);
-            return response()->json(['error' => $errorMessage, 'token' => null], 500);
+{
+    try {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = User::where('email', $request->email)->first();
+            $token = $user->createToken('authToken')->plainTextToken;
+            return response()->json([
+                'user' => $user,
+                'token' => $token,
+            ]);
         }
+
+        return response()->json(['error' => 'Unauthorized', 'token' => null], 401);
+    } catch (\Exception $e) {
+        $errorMessage = $e->getMessage();
+        Log::error('Login failed: ' . $errorMessage);
+        return response()->json(['error' => $errorMessage, 'token' => null], 500);
     }
+}
+
 
 
     public function register(Request $request)
@@ -54,11 +55,11 @@ class AuthController extends Controller
 
             Log::info('User created successfully');
 
-            $token = $user->createToken('authToken')->plainTextToken;
+            //$token = $user->createToken('authToken')->plainTextToken;
 
             Log::info('Token created successfully');
 
-            return response()->json(['token' => $token], 201);
+            return response()->json([$user], 201);
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
             Log::error('Registration failed: ' . $errorMessage);
