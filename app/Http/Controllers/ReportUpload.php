@@ -95,7 +95,7 @@ class ReportUpload extends Controller
             $report = Report_table::findOrFail($id);
             $report->update([
                 'User_verify_id' => $user_id,
-                'Report_status' => 'Approve'
+                'Report_status' => '1'
             ]);
 
             return response()->json(['message'=> 'Report Approved Success']);
