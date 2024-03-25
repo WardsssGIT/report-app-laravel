@@ -24,15 +24,15 @@ Route::post('/register', [AuthController::class, 'register']);
 // Routes protected by the 'auth:sanctum' middleware
 Route::middleware('auth:sanctum')->group(function () {
 
-
-});
-
 Route::get('/reports', [ReportUpload::class, 'index']); // Route to get all reports
 Route::post('/reports-upload', [ReportUpload::class, 'store']); // Route to upload a report
 Route::get('/reports/{id}', [ReportUpload::class, 'show']); // Route to get a single report by ID
 Route::put('/reports/{id}', [ReportUpload::class, 'update']); // Route to update a report by ID
 Route::put('/reports/archive/{id}', [ReportUpload::class, 'archive']); // Route to archive a report by ID
 Route::get('/reports/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']); // Route to generate PDF for a report by ID
-Route::post('/report/{id}/approve', [ReportUpload::class, 'approve_report']); // Route to approve a report by ID
+Route::post('/report/approve/{id}', [ReportUpload::class, 'approve_report']); // Route to approve a report by ID
 Route::get('/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']); // Route to generate PDF for a report by ID
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // Route for user logout
+
+});
+
