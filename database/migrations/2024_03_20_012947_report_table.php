@@ -13,20 +13,23 @@ return new class extends Migration
     {
         //
         Schema::create('Report_table', function (Blueprint $table) {
-            $table->id();  
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            
+
             $table->string('date_of_report')->nullable();
             $table->string('report_type')->nullable();
             $table->string('report_name')->nullable();
-            $table->string('department_involved')->nullable();
-            $table->text('description')->nullable(); 
+
+            $table->unsignedBigInteger('department_id');
+            $table->foreign('department_id')->references('id')->on('departments');
+
+            $table->text('description')->nullable();
             $table->boolean('is_active')->default(1);
-            $table->integer('user_verify_id')->nullable();
+            /*     $table->integer('user_verify_id')->nullable();
             $table->boolean('report_status')->nullable();
-            $table->text('remarks')->nullable();
-            
+            $table->text('remarks')->nullable(); */
+
             $table->timestamps();
         });
     }
