@@ -14,12 +14,12 @@ class Report_table extends Model
         'date_of_report',
         'report_type',
         'report_name',
-        'department_involved',
+        'department_id',
         'description',
         'is_active',
         'user_id',
         'user_verify_id',
-        'report_status',
+        'report_status_id',
         'remarks',
     ];
 
