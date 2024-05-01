@@ -6,8 +6,10 @@ use App\Models\Report_table;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use App\Notifications\EmailNotification;
+use Illuminate\Support\Facades\Auth;
+
 class ReportUpload extends Controller
 {
     public function index()
@@ -97,25 +99,39 @@ class ReportUpload extends Controller
     }
 
     public function approve_report(Request $request, $id)
-    {
-        try {
-            $user_id = $request->user()->id;
-            $report = Report_table::findOrFail($id);
-            $report->update([
-                'User_verify_id' => $user_id,
-                'Report_status' => '1',
-                'Remarks' => 'Approved'
-            ]);
+{
+    try {
+        $user_id = $request->user()->id;
+        $report = Report_table::findOrFail($id);
+        $report->update([
+            'User_verify_id' => $user_id,
+            'Report_status' => '1',
+            'Remarks' => 'Approved'
+        ]);
 
-            $sendEmailController = new SendEmailController();
-            $sendEmailController->sendnotification($report);
+        // Retrieve the user associated with the report
+        $user = User::find($report->user_id);
+        if ($user && $user->email) {
+            $details = [
+                'greeting' => 'This is feedback from your Report',
+                'body' => 'Your Report was approved',
+                'actiontext' => 'Check your email',
+                'actionurl' => '/',
+                'lastline' => 'CREDITS: REPORTING APP',
+            ];
 
-            return response()->json(['message'=> 'Report Approved Success']);
-        } catch (\Exception $e) {
-            Log::error('Error approving report'. $e->getMessage());
-            return response()->json(['error'=> $e->getMessage()], 500);
+            // Send notification to user
+            $user->notify(new EmailNotification($details));
         }
+
+        return response()->json(['message'=> 'Report Approved Success']);
+    } catch (\Exception $e) {
+        Log::error('Error approving report'. $e->getMessage());
+        return response()->json(['error'=> $e->getMessage()], 500);
     }
+}
+
+
     
     public function disapprove_report(Request $request, $id){
         try{
@@ -126,9 +142,21 @@ class ReportUpload extends Controller
                 'Report_status' => '1',
                 'Remarks' => 'Disapproved'
             ]);
+        // Retrieve the user associated with the report
+        $user = User::find($report->user_id);
+        if ($user && $user->email) {
+            $details = [
+                'greeting' => 'This is feedback from your Report',
+                'body' => 'Your Report was Disapproved',
+                'actiontext' => 'Check your email',
+                'actionurl' => '/',
+                'lastline' => 'CREDITS: REPORTING APP',
+            ];
 
-            $sendEmailController = new SendEmailController();
-            $sendEmailController->rejected($report);
+            // Send notification to user
+            $user->notify(new EmailNotification($details));
+        }
+
 
             return response()->json(['message'=> 'Report disapprove Success']);
         } catch (\Exception $e) {

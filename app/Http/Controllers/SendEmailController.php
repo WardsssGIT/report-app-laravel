@@ -5,71 +5,61 @@ namespace App\Http\Controllers;
 use App\Models\Report_table;
 use App\Notifications\EmailNotification;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class SendEmailController extends Controller
 {
-    public function sendNotification($reportId)
+        public function sendnotification()
     {
-        // Retrieve the report
-        $report = Report_table::find($reportId);
+        // Retrieve report data with user_id
+        $reports = DB::table('report_table')->get();
 
-        // Check if the report exists
-        if ($report) {
-            // Retrieve the user who created the report
-            $user = $report->user_id;
+        // Loop through each report
+        foreach ($reports as $report) {
+            // Retrieve user corresponding to the report
+            $user = User::find($report->user_id);
 
             // Check if user exists and has an email
             if ($user && $user->email) {
                 $details = [
                     'greeting' => 'This is feedback from your Report',
                     'body' => 'Your Report was approved',
-                    'actionText' => 'Check your email',
-                    'actionUrl' => '/',
-                    'lastLine' => 'CREDITS: REPORTING APP',
+                    'actiontext' => 'Check your email',
+                    'actionurl' => '/',
+                    'lastline' => 'CREDITS: REPORTING APP',
                 ];
 
                 // Send notification to user
                 $user->notify(new EmailNotification($details));
-
-                return 'Notification sent to the creator of the report.';
-            } else {
-                return 'User does not exist or does not have an email.';
             }
-        } else {
-            return 'Report not found.';
         }
     }
 
-    public function rejected($reportId)
+    public function rejected()
     {
-        // Retrieve the report
-        $report = Report_table::find($reportId);
+        // Retrieve report data with user_id
+        $reports = DB::table('report_table')->get();
 
-        // Check if the report exists
-        if ($report) {
-            // Retrieve the user who created the report
-            $user = $report->user_id;
+        // Loop through each report
+        foreach ($reports as $report) {
+            // Retrieve user corresponding to the report
+            $user = User::find($report->user_id);
 
             // Check if user exists and has an email
             if ($user && $user->email) {
                 $details = [
                     'greeting' => 'This is feedback from your Report',
                     'body' => 'Your Report was disapproved',
-                    'actionText' => 'Check your email',
-                    'actionUrl' => '/',
-                    'lastLine' => 'CREDITS: REPORTING APP',
+                    'actiontext' => 'Check your email',
+                    'actionurl' => '/',
+                    'lastline' => 'CREDITS: REPORTING APP',
                 ];
 
                 // Send notification to user
                 $user->notify(new EmailNotification($details));
-
-                return 'Notification sent to the creator of the report.';
-            } else {
-                return 'User does not exist or does not have an email.';
             }
-        } else {
-            return 'Report not found.';
         }
     }
-}
+
+}    

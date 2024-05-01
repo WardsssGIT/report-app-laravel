@@ -45,7 +45,7 @@ Route::get('/useraccounts',[UserModifier::class, 'indexuser']); // Route for dis
 Route::post('/temporary-data',[TempData::class, 'storetemporary']);//store temporary data
 
 //email
-Route::get('/emailapproved',[SendEmailController::class,"sendnotification"]); //reportapproved
+Route::post('reports/{reportId}/send-notification', [SendEmailController::class, 'sendnotification']);
 Route::get('/emaildisapproved',[SendEmailController::class,"rejected"]); //report disapproved
 
 //department
