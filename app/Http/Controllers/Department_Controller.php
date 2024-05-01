@@ -41,7 +41,7 @@ public function showall()
 
     // Return the departments as a JSON response
     //return response()->json(['departments' => $departments], 200);
-    return response(compact('department_involved'),200);
+    return response(compact('departments'),200);
 }
 
 }
