@@ -13,11 +13,11 @@ class Department_Controller extends Controller
 {
     try {
         $validatedData = $request->validate([
-            'departments' => 'required',
+            'department_types' => 'required',
         ]);
 
         // Check if department already exists
-        $existingDepartment = Departments::where('departments', $validatedData['departments'])->first();
+        $existingDepartment = Departments::where('department_types', $validatedData['department_types'])->first();
 
         if ($existingDepartment) {
             return response()->json(['error' => 'Department already exists'], 400);
@@ -41,7 +41,7 @@ public function showall()
 
     // Return the departments as a JSON response
     //return response()->json(['departments' => $departments], 200);
-    return response(compact('departments'),200);
+    return response(compact('department_types'),200);
 }
 
 }
