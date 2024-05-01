@@ -13,11 +13,11 @@ class Departmentcontroller extends Controller
 {
     try {
         $validatedData = $request->validate([
-            'department_involved' => 'required',
+            'name' => 'required',
         ]);
 
         // Check if department already exists
-        $existingDepartment = Departments::where('department_involved', $validatedData['department_involved'])->first();
+        $existingDepartment = Departments::where('name', $validatedData['name'])->first();
 
         if ($existingDepartment) {
             return response()->json(['error' => 'Department already exists'], 400);
