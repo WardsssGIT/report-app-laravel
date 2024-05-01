@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Departments;
 use Illuminate\Support\Facades\Log;
 
-class Department_Controller extends Controller
+class Departmentcontroller extends Controller
 {
     // Function to add a department
     public function addDepartment(Request $request)

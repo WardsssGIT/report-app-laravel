@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportUpload;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Department_Controller;
+use App\Http\Controllers\Departmentcontroller;
 use App\Http\Controllers\TempData;
 use App\Http\Controllers\UserModifier;
 use App\Http\Controllers\SendEmailController;
@@ -46,11 +46,11 @@ Route::post('/temporary-data',[TempData::class, 'storetemporary']);//store tempo
 
 //email
 Route::post('reports/{reportId}/send-notification', [SendEmailController::class, 'sendnotification']);
-Route::get('/emaildisapproved',[SendEmailController::class,"rejected"]); //report disapproved
+Route::get('/emaildisapproved',[SendEmailController::class,'rejected']); //report disapproved
 
 //department
-Route::post('/adddepartment',[Department_Controller::class,"addDepartment"]);//add department
-Route::get('/indexdepartment',[Department_Controller::class,"showall"]);
+Route::post('/adddepartment',[Departmentcontroller::class,'addDepartment']);//add department
+Route::get('/indexdepartment',[Departmentcontroller::class,'showall']);
 });
 
 

@@ -26,9 +26,9 @@ return new class extends Migration
 
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(1);
-            /*     $table->integer('user_verify_id')->nullable();
-            $table->boolean('report_status')->nullable();
-            $table->text('remarks')->nullable(); */
+            
+            $table->unsignedBigInteger('report_status_id');
+            $table->foreign('report_status_id')->references('id')->on('report_status');
 
             $table->timestamps();
         });

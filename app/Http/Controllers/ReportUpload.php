@@ -104,7 +104,7 @@ class ReportUpload extends Controller
         $user_id = $request->user()->id;
         $report = Report_table::findOrFail($id);
         $report->update([
-            'User_verify_id' => $user_id,
+            //'User_verify_id' => $user_id,
             'Report_status' => '1',
             'Remarks' => 'Approved'
         ]);
@@ -138,7 +138,7 @@ class ReportUpload extends Controller
             $user_id = $request->user()->id;
             $report = Report_table::findOrFail($id);
             $report->update([
-                'User_verify_id' => $user_id,
+               //'User_verify_id' => $user_id,
                 'Report_status' => '1',
                 'Remarks' => 'Disapproved'
             ]);
