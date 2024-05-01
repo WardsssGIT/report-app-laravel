@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->string('departments')->nullable();
+            $table->string('department_name')->nullable();
             $table->timestamps();
         });
     }

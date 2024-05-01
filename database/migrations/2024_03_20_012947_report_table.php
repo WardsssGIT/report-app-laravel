@@ -17,15 +17,15 @@ return new class extends Migration
             $table->unsignedBigInteger('rtuser_id');
             $table->foreign('rtuser_id')->references('id')->on('users');
             
-            $table->string('Date_of_report')->nullable();
-            $table->string('Report_type')->nullable();
-            $table->string('Report_name')->nullable();
-            $table->string('Department_involved')->nullable();
-            $table->text('Description')->nullable(); 
-            $table->boolean('is_Active')->default(1);
-            $table->integer('User_verify_id')->nullable();
-            $table->boolean('Report_status')->nullable();
-            $table->text('Remarks')->nullable();
+            $table->string('date_of_report')->nullable();
+            $table->string('report_type')->nullable();
+            $table->string('report_name')->nullable();
+            $table->string('department_involved')->nullable();
+            $table->text('description')->nullable(); 
+            $table->boolean('is_active')->default(1);
+            $table->integer('user_verify_id')->nullable();
+            $table->boolean('report_status')->nullable();
+            $table->text('remarks')->nullable();
             
             $table->timestamps();
         });
