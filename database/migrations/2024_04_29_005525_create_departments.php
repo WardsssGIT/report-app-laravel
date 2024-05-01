@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            
             $table->unsignedBigInteger('report_table_id');
             $table->foreign('report_table_id')->references('id')->on('report_table');
+
+            $table->string('department_types')->nullable();
 
 
             $table->timestamps();
