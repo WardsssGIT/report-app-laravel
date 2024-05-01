@@ -21,7 +21,7 @@ class UserModifier extends Controller
                 // Handle any exceptions that may occur during retrieval
                 Log::error('Error fetching reports: ' . $e->getMessage());
                 // Return an error response
-                return response()->json(['error' => 'Failed to fetch reports'], 500);
+                return response()->json(['error' => 'Failed to fetch users'], 500);
             }
         }
         

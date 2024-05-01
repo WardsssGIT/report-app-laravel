@@ -15,7 +15,7 @@ class ReportUpload extends Controller
     public function index()
     {
         try {
-            $reports = Report_table::where('is_Active', true)->get();
+            $reports = Report_table::where('is_active', true)->get();
             return response()->json($reports);
         } catch (\Exception $e) {
             Log::error('Error fetching reports: ' . $e->getMessage());
@@ -90,7 +90,7 @@ class ReportUpload extends Controller
     {
         try {
             $report = Report_table::findOrFail($id);
-            $report->update(['is_Active' => false]); // Set the report as archived
+            $report->update(['is_active' => false]); // Set the report as archived
             return response()->json(['message' => 'Report archived successfully']);
         } catch (\Exception $e) {
             Log::error('Error archiving report: ' . $e->getMessage());
