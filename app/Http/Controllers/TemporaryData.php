@@ -12,11 +12,11 @@ class TempData extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'Date_of_report' => 'required',
-                'Report_type' => 'required',
-                'Report_name' => 'required',
-                'Department_involved' => 'required',
-                'Description' => 'required',
+                'date_of_report' => 'required',
+                'report_type' => 'required',
+                'report_name' => 'required',
+                'department_involved' => 'required',
+                'description' => 'required',
             ]);
     
             $report = Temp_data::create($validatedData);

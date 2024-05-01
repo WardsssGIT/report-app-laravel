@@ -14,23 +14,20 @@ class AuthController extends Controller
     {
         try {
             $credentials = $request->only('email', 'password');
-
-            if (Auth::attempt($credentials)) {
-                $user = User::where('email', $request->email)->first();
-                $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json([
-                    'user' => $user,
-                    'token' => $token,
-                ]);
+    
+            if (!Auth::attempt($credentials)) {
+                return response()->json(['error' => 'Unauthorized', 'token' => null], 401);
             }
-
-            return response()->json(['error' => 'Unauthorized', 'token' => null], 401);
+    
+            $user = User::where('email', $request->email)->first();
+            $token = $user->createToken('authToken')->plainTextToken;
+            return response()->json(['user' => $user, 'token' => $token]);
         } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            Log::error('Login failed: ' . $errorMessage);
-            return response()->json(['error' => $errorMessage, 'token' => null], 500);
+            Log::error('Login failed: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage(), 'token' => null], 500);
         }
     }
+    
 
 
 
@@ -42,7 +39,6 @@ class AuthController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|unique:users,email',
-                'department' => 'required|string|max:255',
                 'password' => 'required|string|min:6',
             ]);
 
@@ -51,7 +47,6 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'department' => $request->department,
                 'password' => Hash::make($request->password),
             ]);
 

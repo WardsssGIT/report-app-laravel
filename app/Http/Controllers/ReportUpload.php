@@ -6,7 +6,8 @@ use App\Models\Report_table;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\EmailNotification;
 class ReportUpload extends Controller
 {
     public function index()
@@ -24,24 +25,31 @@ class ReportUpload extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'Date_of_report' => 'required',
-                'Report_type' => 'required',
-                'Report_name' => 'required',
-                'Department_involved' => 'required',
-                'Description' => 'required',
-                'is_Active' => '1',
+                'date_of_report' => 'required',
+                'report_type' => 'required',
+                'report_name' => 'required',
+                'department_involved' => 'required',
+                'description' => 'required',
+                'is_active' => '1',
             ]);
 
-            $validatedData['is_Active'] = true;
     
-            $report = Report_table::create($validatedData);
-    
-            return response()->json(['message' => 'Report created successfully', 'report' => $report], 201);
-        } catch (\Exception $e) {
-            Log::error('Error storing report: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+            // Get the user ID of the currently logged-in user
+        $user_id = Auth::id();
+
+        // Include the user_id in the validated data
+        $validatedData['user_id'] = $user_id;
+        $validatedData['is_Active'] = true;
+
+        // Create the report with the validated data
+        $report = Report_table::create($validatedData);
+
+        return response()->json(['message' => 'Report created successfully', 'report' => $report], 201);
+    } catch (\Exception $e) {
+        Log::error('Error storing report: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
     
     public function show($id)
     {
@@ -60,11 +68,11 @@ class ReportUpload extends Controller
             $report = Report_table::findOrFail($id);
 
             $validatedData = $request->validate([
-                'Date_of_report' => 'required',
-                'Report_type' => 'required',
-                'Report_name' => 'required',
-                'Department_involved' => 'required',
-                'Description' => 'required',
+                'date_of_report' => 'required',
+                'report_type' => 'required',
+                'report_name' => 'required',
+                'department_involved' => 'required',
+                'description' => 'required',
             ]);
 
             $report->update($request->all());
@@ -99,6 +107,9 @@ class ReportUpload extends Controller
                 'Remarks' => 'Approved'
             ]);
 
+            $sendEmailController = new SendEmailController();
+            $sendEmailController->sendnotification($report);
+
             return response()->json(['message'=> 'Report Approved Success']);
         } catch (\Exception $e) {
             Log::error('Error approving report'. $e->getMessage());
@@ -115,6 +126,9 @@ class ReportUpload extends Controller
                 'Report_status' => '1',
                 'Remarks' => 'Disapproved'
             ]);
+
+            $sendEmailController = new SendEmailController();
+            $sendEmailController->rejected($report);
 
             return response()->json(['message'=> 'Report disapprove Success']);
         } catch (\Exception $e) {
