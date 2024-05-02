@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('departments', function (Blueprint $table) {
         $table->id();
         // Assuming department_involved is a string column in the report_table table
-        $table->string('name')->nullable();
+        $table->string('department_name')->nullable();
         $table->timestamps();
     });
 }

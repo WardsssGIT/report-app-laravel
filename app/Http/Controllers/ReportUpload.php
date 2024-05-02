@@ -30,7 +30,7 @@ class ReportUpload extends Controller
                 'date_of_report' => 'required',
                 'report_type' => 'required',
                 'report_name' => 'required',
-                'name' => 'required',
+                'department_id' => 'required',
                 'description' => 'required',
                 'is_active' => '1',
             ]);
@@ -73,7 +73,7 @@ class ReportUpload extends Controller
                 'date_of_report' => 'required',
                 'report_type' => 'required',
                 'report_name' => 'required',
-                'department_involved' => 'required',
+                'department_id' => 'required',
                 'description' => 'required',
             ]);
 

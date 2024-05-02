@@ -14,7 +14,7 @@ class Temp_data extends Model
         'date_of_report',
         'report_type',
         'report_name',
-        'department_involved',
+        'department_id',
         'description',
         'is_active',
         'user_id',
