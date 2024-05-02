@@ -8,6 +8,7 @@ use App\Http\Controllers\Departmentcontroller;
 use App\Http\Controllers\TempData;
 use App\Http\Controllers\UserModifier;
 use App\Http\Controllers\SendEmailController;
+use App\Http\Controllers\EmployeeDetailsController;
 
 
 /*
@@ -51,6 +52,14 @@ Route::get('/emaildisapproved',[SendEmailController::class,'rejected']); //repor
 //department
 Route::post('/adddepartment',[Departmentcontroller::class,'addDepartment']);//add department
 Route::get('/indexdepartment',[Departmentcontroller::class,'showall']);
+
+
+// Route to add employee details
+Route::post('/employee-details', [EmployeeDetailsController::class, 'add']);
+// Route to show employee details by ID
+Route::get('/employee-details/{id}', [EmployeeDetailsController::class, 'show']);
+// Route to modify employee details by ID
+Route::put('/employee-details/{id}', [EmployeeDetailsController::class, 'modify']);
 });
 
 

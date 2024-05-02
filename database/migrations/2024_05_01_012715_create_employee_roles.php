@@ -18,6 +18,10 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            
+            $table->unsignedBigInteger('employee_detail_id')->nullable();
+            $table->foreign('employee_detail_id')->references('id')->on('employee_details');
+
             $table->timestamps();
 
         
