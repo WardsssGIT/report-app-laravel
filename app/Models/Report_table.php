@@ -26,4 +26,8 @@ class Report_table extends Model
     protected $casts = [
         'Report_status_active' => 'boolean',
     ];
+    function department()
+    {
+        return $this->belongsTo(Departments::class, 'department_id');
+    }
 }

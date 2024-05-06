@@ -10,39 +10,26 @@ class Departmentcontroller extends Controller
 {
     // Function to add a department
     public function addDepartment(Request $request)
-{
-    try {
-        $validatedData = $request->validate([
-            'department_name' => 'required',
-        ]);
-
-        // Check if department already exists
-        $existingDepartment = Departments::where('department_name', $validatedData['department_name'])->first();
-
-        if ($existingDepartment) {
-            return response()->json(['error' => 'Department already exists'], 400);
+    {
+        try {
+            $validatedData = $request->validate(['department_name' => 'required']);
+            $existingDepartment = Departments::where('department_name', $validatedData['department_name'])->first();
+            if ($existingDepartment) return response()->json(['error' => 'Department already exists'], 400);
+            $newDepartment = Departments::create($validatedData);
+            return response()->json(['message' => 'Department created successfully', 'report' => $newDepartment], 201);
+        } catch (\Exception $e) {
+            Log::error('Error storing department: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()],404);
         }
-
-        // If department doesn't exist, create it
-        $newDepartment = Departments::create($validatedData);
-
-        return response()->json(['message' => 'Department created successfully', 'report' => $newDepartment], 201);
-    } catch (\Exception $e) {
-        Log::error('Error storing department: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()],404);
     }
-}
+    
 
 
-public function showall()
-{
-    // Retrieve all departments from the database
-    $departments = Departments::all();
-
-    // Return the departments as a JSON response
-    //return response()->json(['departments' => $departments], 200);
-    return response(compact('departments'),200);
-}
+    public function showall()
+    {
+        $departments = Departments::all();
+        return response(compact('departments'),200);
+    }
 
 }
 

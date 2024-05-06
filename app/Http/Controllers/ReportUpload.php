@@ -15,7 +15,7 @@ class ReportUpload extends Controller
     public function index()
     {
         try {
-            $reports = Report_table::where('is_active', true)->get();
+            $reports = Report_table::with('department')->where('is_active', true)->get();
             return response()->json($reports);
         } catch (\Exception $e) {
             Log::error('Error fetching reports: ' . $e->getMessage());

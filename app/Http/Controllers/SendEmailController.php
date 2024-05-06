@@ -12,15 +12,11 @@ class SendEmailController extends Controller
 {
         public function sendnotification()
     {
-        // Retrieve report data with user_id
         $reports = DB::table('report_table')->get();
 
-        // Loop through each report
         foreach ($reports as $report) {
-            // Retrieve user corresponding to the report
             $user = User::find($report->user_id);
 
-            // Check if user exists and has an email
             if ($user && $user->email) {
                 $details = [
                     'greeting' => 'This is feedback from your Report',
@@ -29,8 +25,6 @@ class SendEmailController extends Controller
                     'actionurl' => '/',
                     'lastline' => 'CREDITS: REPORTING APP',
                 ];
-
-                // Send notification to user
                 $user->notify(new EmailNotification($details));
             }
         }
@@ -38,15 +32,15 @@ class SendEmailController extends Controller
 
     public function rejected()
     {
-        // Retrieve report data with user_id
+    
         $reports = DB::table('report_table')->get();
 
-        // Loop through each report
+    
         foreach ($reports as $report) {
-            // Retrieve user corresponding to the report
+            
             $user = User::find($report->user_id);
 
-            // Check if user exists and has an email
+        
             if ($user && $user->email) {
                 $details = [
                     'greeting' => 'This is feedback from your Report',
@@ -56,7 +50,7 @@ class SendEmailController extends Controller
                     'lastline' => 'CREDITS: REPORTING APP',
                 ];
 
-                // Send notification to user
+            
                 $user->notify(new EmailNotification($details));
             }
         }
