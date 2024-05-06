@@ -11,18 +11,18 @@ class UserModifier extends Controller
 {
     public function indexuser()
     {
-            try {
-                // Retrieve all reports without the is_Active rule
-                $useraccount = User::get();
-                
-                // Return the reports as JSON response
-                return response()->json($useraccount);
-            } catch (\Exception $e) {
-                // Handle any exceptions that may occur during retrieval
-                Log::error('Error fetching reports: ' . $e->getMessage());
-                // Return an error response
-                return response()->json(['error' => 'Failed to fetch users'], 500);
-            }
+        try {
+            // Retrieve all users with their associated department information
+            $useraccounts = User::join('employee_roles', 'users.id', '=', 'employee_roles.user_id')
+                ->join('departments', 'employee_roles.department_id', '=', 'departments.id')
+                ->get();
+            // Return the users with department information as JSON response
+            return response(compact('useraccounts'), 200);
+        } catch (\Exception $e) {
+            // Log the actual exception message and stack trace
+            Log::error('Error fetching users: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            // Return an error response with the actual exception message
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-        
+    }
 }

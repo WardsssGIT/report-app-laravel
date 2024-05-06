@@ -52,6 +52,36 @@ class ReportUpload extends Controller
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
+
+public function storetemporary(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'date_of_report' => 'required',
+                'report_type' => 'required',
+                'report_name' => 'required',
+                'department_id' => 'required',
+                'description' => 'required',
+                'is_active' => '0',
+            ]);
+
+    
+            // Get the user ID of the currently logged-in user
+        $user_id = Auth::id();
+
+        // Include the user_id in the validated data
+        $validatedData['user_id'] = $user_id;
+        $validatedData['is_active'] = false;
+
+        // Create the report with the validated data
+        $report = Report_table::create($validatedData);
+
+        return response()->json(['message' => 'Temporary Report saved', 'report' => $report], 201);
+    } catch (\Exception $e) {
+        Log::error('Error storing report: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
     
     public function show($id)
     {

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departments;
+use App\Models\EmployeeRole;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,37 +35,50 @@ class AuthController extends Controller
 
 
     public function register(Request $request)
-    {
-        try {
-            Log::info('Attempting user registration');
+{
+    try {
+        Log::info('Attempting user registration');
 
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|unique:users,email',
-                'password' => 'required|string|min:6',
-            ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'department_id' => 'required|exists:departments,id', // Validate department ID
+        ]);
 
-            Log::info('Validation successful');
+        Log::info('Validation successful');
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+        // Start database transaction
+        DB::beginTransaction();
 
-            Log::info('User created successfully');
+        // Create user
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-            //$token = $user->createToken('authToken')->plainTextToken;
+        // Create employee role
+        $employeeRole = new EmployeeRole();
+        $employeeRole->user_id = $user->id;
+        $employeeRole->department_id = $request->department_id;
+        $employeeRole->save();
 
-            Log::info('Token created successfully');
+        // Commit transaction
+        DB::commit();
 
-            return response(compact('user'), 200);
-        } catch (\Exception $e) {
-            $error = $e->getMessage();
-            Log::error('Registration failed: ' . $error);
-            return response(compact('error'), 404);;
-        }
+        Log::info('User created successfully');
+
+        return response(compact('user'), 200);
+    } catch (\Exception $e) {
+        // Rollback transaction if an error occurs
+        DB::rollback();
+
+        $error = $e->getMessage();
+        Log::error('Registration failed: ' . $error);
+        return response(compact('error'), 404);
     }
+}
 
     public function logout(Request $request)
     {

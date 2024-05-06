@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportUpload;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Departmentcontroller;
-use App\Http\Controllers\TempData;
 use App\Http\Controllers\UserModifier;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\EmployeeDetailsController;
@@ -43,7 +42,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // Ro
 
 Route::get('/useraccounts',[UserModifier::class, 'indexuser']); // Route for displaying all user accounts
 //For Temporary Data
-Route::post('/temporary-data',[TempData::class, 'storetemporary']);//store temporary data
+Route::post('/temporary-data',[ReportUpload::class, 'storetemporary']);//store temporary data
 
 //email
 Route::post('reports/{reportId}/send-notification', [SendEmailController::class, 'sendnotification']);
@@ -52,7 +51,6 @@ Route::get('/emaildisapproved',[SendEmailController::class,'rejected']); //repor
 //department
 Route::post('/adddepartment',[Departmentcontroller::class,'addDepartment']);//add department
 Route::get('/indexdepartment',[Departmentcontroller::class,'showall']);
-
 
 // Route to add employee details
 Route::post('/employee-details', [EmployeeDetailsController::class, 'add']);
