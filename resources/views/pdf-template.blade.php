@@ -99,19 +99,19 @@
             </tr>
             <tr>
                 <th>Date of Report</th>
-                <td>{{$report_data->Date_of_report}}</td>
+                <td>{{$report_data->date_of_report}}</td>
             </tr>
             <tr>
                 <th>Report Name</th>
-                <td>{{$report_data->Report_name}}</td>
+                <td>{{$report_data->report_name}}</td>
             </tr>
             <tr>
                 <th>Report Type</th>
-                <td>{{$report_data->Report_type}}</td>
+                <td>{{$report_data->report_type}}</td>
             </tr>
             <tr>
                 <th>Department Involved</th>
-                <td>{{$report_data->Department_involved}}</td>
+                <td>{{$report_data->department_id}}</td>
             </tr>
         </table>
     </div>
@@ -121,7 +121,7 @@
         <h2 style="color: #333; text-align: center;">Description</h2>
         <table class="description">
             <tr>
-                <td>{{$report_data->Description}}</td>
+                <td>{{$report_data->description}}</td>
             </tr>
         </table>
     </div>

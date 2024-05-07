@@ -3,57 +3,73 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\employee_details;
+use App\Models\employeedetails;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeDetailsController extends Controller
 {
     // Method to add details
+//     public function add(Request $request)
+// {
+//     try {
+//         $validatedData = $request->validate([
+//             'user_id' => 'required',
+//             'birthday' => 'required|date',
+//             'gender' => 'required',
+//             'address' => 'required',
+//             'contact_number' => 'required',
+//             'first_name' => 'required',
+//             'last_name' => 'required',
+//         ]);
+
+//         // Create the employee details with the validated data
+//         $employeeDetails = employeedetails::create($validatedData);
+
+//         return response()->json(['message' => 'Employee details added successfully', 'data' => $employeeDetails], 200);
+//     } catch (\Exception $e) {
+//         Log::error('Error adding employee details: ' . $e->getMessage());
+//         return response()->json(['error' => $e->getMessage()], 500);
+//     }
+// }
+
     public function add(Request $request)
-{
-    $validatedData = $request->validate([
-        'user_id' => 'required',
-        'birthday' => 'required|date',
-        'address' => 'required',
-        'contact_number' => 'required',
-        'first_name' => 'required',
-        'last_name' => 'required',
-    ]);
+    {
+        try {
+            $user_id = auth()->id();
+            
+            // Check if employee details already exist for this user
+            $existingDetails = employeedetails::where('user_id', $user_id)->first();
+            if ($existingDetails) {
+                return response()->json(['error' => 'Employee details already exist for this user'], 400);
+            }
 
-    $employeeDetails = employee_details::create($validatedData);
+            $validatedData = $request->validate([
+                'birthday' => 'required|date',
+                'gender' => 'required',
+                'address' => 'required',
+                'contact_number' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
+            ]);
+            $validatedData['user_id'] = $user_id;
+            $employeeDetails = employeedetails::create($validatedData);
+            return response()->json(['message' => 'Employee details added successfully', 'data' => $employeeDetails], 200);
+        } catch (\Exception $e) {
+            Log::error('Error adding employee details: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
-    return response()->json(['message' => 'Employee details added successfully', 'data' => $employeeDetails], 200);
-}
+
+
 
 
     // Method to show details
-    public function show($id)
+    public function show()
     {
-        $employeeDetails = employee_details::find($id);
-
-        if (!$employeeDetails) {
-            return response()->json(['message' => 'Employee details not found'], 404);
-        }
-        return response()->json(['data' => $employeeDetails], 200);
+        $details = employeedetails::where('user_id', Auth::id())->first();
+        return $details ? response()->json(['data' => $details], 200) : response()->json(['message' => 'Employee details not found for the authenticated user'], 404);
     }
-
-    // Method to modify details
-    public function modify(Request $request, $id)
-    {
-        // Validate request data
-        $validatedData = $request->validate([
-            'user_id' => 'required',
-            'birthday' => 'required|date',
-            'address' => 'required',
-            'contact_number' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-        ]);
-        $employeeDetails = employee_details::find($id);
-
-        if (!$employeeDetails) {
-            return response()->json(['message' => 'Employee details not found'], 404);
-        }
-        $employeeDetails->update($validatedData);
-        return response()->json(['message' => 'Employee details updated successfully', 'data' => $employeeDetails], 200);
+    
     }
-}

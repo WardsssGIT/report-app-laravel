@@ -6,7 +6,6 @@ use App\Http\Controllers\ReportUpload;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Departmentcontroller;
 use App\Http\Controllers\UserModifier;
-use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\EmployeeDetailsController;
 
 
@@ -29,7 +28,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
 //Route::post('/register', [AuthController::class, 'register']);
 Route::post('/reports-upload', [ReportUpload::class, 'store']); // Route to upload a report
-Route::get('/reports',[ReportUpload::class,'index']); // show all reports
+Route::get('/show-reports',[ReportUpload::class,'index']); // show all reports
 
 Route::get('/reports/{id}', [ReportUpload::class, 'show']); // Route to get a single report by ID
 Route::put('/reports/{id}', [ReportUpload::class, 'update']); // Route to update a report by ID
@@ -37,27 +36,22 @@ Route::put('/reports/archive/{id}', [ReportUpload::class, 'archive']); // Route 
 Route::get('/reports/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']); // Route to generate PDF for a report by ID
 Route::post('/reports/approve/{id}', [ReportUpload::class, 'approve_report']); // Route to approve a report by ID
 Route::post('/reports/disapprove/{id}',[ReportUpload::class,'disapprove_report']);// Route to disapprove a report by ID
-Route::get('/generate-pdf/{id}', [ReportUpload::class, 'generate_pdf']); // Route to generate PDF for a report by ID
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // Route for user logout
 
 Route::get('/useraccounts',[UserModifier::class, 'indexuser']); // Route for displaying all user accounts
 //For Temporary Data
 Route::post('/temporary-data',[ReportUpload::class, 'storetemporary']);//store temporary data
 
-//email
-Route::post('reports/{reportId}/send-notification', [SendEmailController::class, 'sendnotification']);
-Route::get('/emaildisapproved',[SendEmailController::class,'rejected']); //report disapproved
-
 //department
 Route::post('/adddepartment',[Departmentcontroller::class,'addDepartment']);//add department
 Route::get('/indexdepartment',[Departmentcontroller::class,'showall']);
 
 // Route to add employee details
-Route::post('/employee-details', [EmployeeDetailsController::class, 'add']);
+Route::post('/add-employee-details', [EmployeeDetailsController::class, 'add']);
 // Route to show employee details by ID
-Route::get('/employee-details/{id}', [EmployeeDetailsController::class, 'show']);
+Route::get('/show-employee-details', [EmployeeDetailsController::class, 'show']);
 // Route to modify employee details by ID
-Route::put('/employee-details/{id}', [EmployeeDetailsController::class, 'modify']);
+Route::put('/edit-employee-details/{id}', [EmployeeDetailsController::class, 'modify']);
 });
 
 
