@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Notifications\EmailNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class ReportUpload extends Controller
 {
@@ -197,16 +199,24 @@ public function storetemporary(Request $request)
 
 
 
+   
     public function generate_pdf($data)
     {
         try {
             // Upload Data
             $report_data = Report_table::find($data);
             $pdf = Pdf::loadView('pdf-template', compact('report_data'));
+            
+            // Save PDF to storage
+            $pdfPath = 'reportsPDF/' . uniqid() . '.pdf'; // Unique filename
+            $pdf->save(public_path($pdfPath));
+            
+            // Return PDF stream
             return $pdf->stream();
         } catch (\Throwable $th) {
             Log::error('Error generating PDF: ' . $th->getMessage());
             return response(['error' => 'Failed to generate PDF'], 500);
         }
     }
+
 }

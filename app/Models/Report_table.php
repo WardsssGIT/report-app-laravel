@@ -15,6 +15,7 @@ class Report_table extends Model
         'report_type',
         'report_name',
         'department_id',
+        'department_name',
         'description',
         'is_active',
         'user_id',

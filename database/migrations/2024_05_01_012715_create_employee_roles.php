@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('department_id')->nullable();
             $table->foreign('department_id')->references('id')->on('departments');
 
+            $table->string('userrole')->nullable();
+
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             

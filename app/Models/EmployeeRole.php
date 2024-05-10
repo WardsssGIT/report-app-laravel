@@ -12,11 +12,11 @@ class EmployeeRole extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'department_id',
+        'user_id', 'department_id','userrole',
     ];
 
     /**
-     * Get the user that owns the employee role.
+     * Get the user that owns the department.
      */
     public function user()
     {
@@ -30,4 +30,6 @@ class EmployeeRole extends Model
     {
         return $this->belongsTo(Departments::class);
     }
+
+
 }

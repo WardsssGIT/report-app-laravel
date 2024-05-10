@@ -12,9 +12,7 @@ class UserModifier extends Controller
     public function indexuser()
     {
         try {
-            $useraccounts = User::join('employee_roles', 'users.id', '=', 'employee_roles.user_id')
-                ->join('departments', 'employee_roles.department_id', '=', 'departments.id')
-                ->get();
+            $useraccounts = User::with('user_role')->get();
             return response(compact('useraccounts'), 200);
         } catch (\Exception $e) {
             Log::error('Error fetching users: ' . $e->getMessage() . "\n" . $e->getTraceAsString());

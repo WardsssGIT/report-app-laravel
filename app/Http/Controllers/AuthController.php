@@ -32,62 +32,65 @@ class AuthController extends Controller
 
 
     public function register(Request $request)
-{
-    try {
-        Log::info('Attempting user registration');
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'department_id' => 'required|exists:departments,id',
-        ]);
-
-        Log::info('Validation successful');
-
-        DB::beginTransaction();
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $employeeRole = new EmployeeRole([
-            'user_id' => $user->id,
-            'department_id' => $request->department_id,
-        ]);
-        $employeeRole->save();
-
-        DB::commit();
-
-        Log::info('User created successfully');
-
-        return response(compact('user'), 200);
-    } catch (\Exception $e) {
-        DB::rollback();
-
-        $error = $e->getMessage();
-        Log::error('Registration failed: ' . $error);
-        return response(compact('error'), 404);
-    }
-}
-
-public function logout(Request $request)
-{
-    try {
-        $user = $request->user();
-
-        if ($user) {
-            $user->currentAccessToken()->delete();
-            return response()->json(['message' => 'Logged out']);
-        } else {
-            return response()->json(['message' => 'No user to log out'], 401);
+    {
+        try {
+            Log::info('Attempting user registration');
+    
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|unique:users,email',
+                'password' => 'required|string|min:6',
+                'department_id' => 'required|exists:departments,id',
+                'userrole' => 'required|string', // Changed 'user_role' to 'userrole'
+            ]);
+    
+            Log::info('Validation successful');
+    
+            DB::beginTransaction();
+    
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+    
+            $employeeRole = new EmployeeRole([
+                'user_id' => $user->id,
+                'department_id' => $request->department_id,
+                'userrole' => $request->userrole, // Changed 'user_role' to 'userrole'
+            ]);
+            $employeeRole->save();
+    
+            DB::commit();
+    
+            Log::info('User created successfully');
+    
+            return response(compact('user'), 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+    
+            $error = $e->getMessage();
+            Log::error('Registration failed: ' . $error);
+            return response(compact('error'), 404);
         }
-    } catch (\Exception $e) {
-        Log::error('Logout failed: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
     }
-}
+    
+
+    public function logout(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            if ($user) {
+                $user->currentAccessToken()->delete();
+                return response()->json(['message' => 'Logged out']);
+            } else {
+                return response()->json(['message' => 'No user to log out'], 401);
+            }
+        } catch (\Exception $e) {
+            Log::error('Logout failed: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
 }
