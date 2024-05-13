@@ -52,7 +52,12 @@ Route::post('/add-employee-details', [EmployeeDetailsController::class, 'add']);
 Route::get('/show-employee-details', [EmployeeDetailsController::class, 'show']);
 // Route to modify employee details by ID
 Route::put('/edit-employee-details/{id}', [EmployeeDetailsController::class, 'modify']);
+
+//get new pdf
+Route::get('/reports/{reportId}/pdf', [ReportUpload::class, 'showPdf']);
 });
+
+
 
 
 

@@ -6,6 +6,7 @@ use App\Models\Report_table;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Access\Response;
 use App\Models\User;
 use App\Notifications\EmailNotification;
 use Illuminate\Support\Facades\Auth;
@@ -36,24 +37,26 @@ class ReportUpload extends Controller
                 'description' => 'required',
                 'is_active' => '1',
             ]);
-
     
             // Get the user ID of the currently logged-in user
-        $user_id = Auth::id();
-
-        // Include the user_id in the validated data
-        $validatedData['user_id'] = $user_id;
-        $validatedData['is_Active'] = true;
-
-        // Create the report with the validated data
-        $report = Report_table::create($validatedData);
-
-        return response()->json(['message' => 'Report created successfully', 'report' => $report], 201);
-    } catch (\Exception $e) {
-        Log::error('Error storing report: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
+            $user_id = Auth::id();
+    
+            // Include the user_id in the validated data
+            $validatedData['user_id'] = $user_id;
+            $validatedData['is_Active'] = true;
+    
+            // Create the report with the validated data
+            $report = Report_table::create($validatedData);
+    
+            // Generate PDF for the created report
+            $pdfPath = $this->generate_pdf($report->id);
+    
+            return response()->json(['message' => 'Report created successfully', 'report' => $report, 'pdf_path' => $pdfPath], 201);
+        } catch (\Exception $e) {
+            Log::error('Error storing report: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
 
 public function storetemporary(Request $request)
     {
@@ -107,6 +110,7 @@ public function storetemporary(Request $request)
                 'report_name' => 'required',
                 'department_id' => 'required',
                 'description' => 'required',
+                'report_pdf' =>'available',
             ]);
 
             $report->update($request->all());
@@ -200,23 +204,55 @@ public function storetemporary(Request $request)
 
 
    
-    public function generate_pdf($data)
+    public function generate_pdf($reportId)
     {
         try {
-            // Upload Data
-            $report_data = Report_table::find($data);
+            // Get report data
+            $report_data = Report_table::find($reportId);
+            
+            // Load PDF view with report data
             $pdf = Pdf::loadView('pdf-template', compact('report_data'));
             
+            // Generate filename for PDF using report ID
+            $pdfFilename = 'report_' . $reportId . '.pdf';
+            $pdfPath = 'reportsPDF/' . $pdfFilename;
+            
             // Save PDF to storage
-            $pdfPath = 'reportsPDF/' . uniqid() . '.pdf'; // Unique filename
             $pdf->save(public_path($pdfPath));
             
-            // Return PDF stream
-            return $pdf->stream();
+            return $pdfPath;
         } catch (\Throwable $th) {
             Log::error('Error generating PDF: ' . $th->getMessage());
-            return response(['error' => 'Failed to generate PDF'], 500);
+            throw new \Exception('Failed to generate PDF');
         }
     }
+    
+
+    public function showPdf($reportId)
+    {
+        try {
+            // Find the report by ID
+            $report = Report_table::findOrFail($reportId);
+    
+            // Generate the PDF path
+            $pdfPath = 'reportsPDF/report_' . $reportId . '.pdf'; // Modified path
+    
+            // Check if PDF exists
+            if (!file_exists(public_path($pdfPath))) {
+                throw new \Exception('PDF not found');
+            }
+    
+            // Return the PDF file
+            return response()->file(public_path($pdfPath), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . basename($pdfPath) . '"'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error showing PDF: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 404);
+        }
+    }
+    
+
 
 }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('report_type')->nullable();
             $table->string('report_name')->nullable();
             $table->text('description')->nullable();
+            $table->string('report_pdf')->nullable();
             $table->boolean('is_active')->default(1);
 
             $table->unsignedBigInteger('department_id')->nullable();
