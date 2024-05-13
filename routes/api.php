@@ -54,7 +54,7 @@ Route::get('/show-employee-details', [EmployeeDetailsController::class, 'show'])
 Route::put('/edit-employee-details/{id}', [EmployeeDetailsController::class, 'modify']);
 
 //get new pdf
-Route::get('/reports/{reportId}/pdf', [ReportUpload::class, 'showPdf']);
+Route::get('/reports/pdf{reportId}', [ReportUpload::class, 'showPdf']);
 });
 
 
