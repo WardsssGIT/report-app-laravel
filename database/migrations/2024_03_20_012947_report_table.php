@@ -16,11 +16,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');//foreign key from users table
+            $table->text('reportdata')->nullable();
 
-            $table->string('date_of_report')->nullable();
-            $table->string('report_type')->nullable();
-            $table->string('report_name')->nullable();
-            $table->text('description')->nullable();
+
+            $table->date('date_of_report');
+            $table->string('report_type')->nullable(); 
+            $table->string('report_name');
+            $table->text('description');
+                          
             $table->string('report_pdf')->nullable();
             $table->boolean('is_active')->default(1);
 

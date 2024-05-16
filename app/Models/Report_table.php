@@ -26,6 +26,7 @@ class Report_table extends Model
 
     protected $casts = [
         'Report_status_active' => 'boolean',
+        'reportdata' => 'array',
     ];
     function department()
     {

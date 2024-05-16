@@ -1,0 +1,72 @@
+{
+    "company": {
+        "name": "Tech Innovators Inc.",
+        "location": {
+            "address": "123 Innovation Drive",
+            "city": "Techville",
+            "state": "CA",
+            "zip": "94043"
+        },
+        "employees": [
+            {
+                "id": 1,
+                "name": "Alice Johnson",
+                "position": "Software Engineer",
+                "email": "alice.johnson@techinnovators.com",
+                "skills": ["Python", "JavaScript", "C++"]
+            },
+            {
+                "id": 2,
+                "name": "Bob Smith",
+                "position": "Data Scientist",
+                "email": "bob.smith@techinnovators.com",
+                "skills": ["Python", "R", "SQL"]
+            },
+            {
+                "id": 3,
+                "name": "Charlie Brown",
+                "position": "Product Manager",
+                "email": "charlie.brown@techinnovators.com",
+                "skills": ["Agile", "Scrum", "Project Management"]
+            }
+        ],
+        "products": [
+            {
+                "id": "P001",
+                "name": "Innovative App",
+                "description": "A groundbreaking mobile app that revolutionizes productivity.",
+                "price": 49.99,
+                "categories": ["Productivity", "Mobile"]
+            },
+            {
+                "id": "P002",
+                "name": "Smart Gadget",
+                "description": "An IoT device that makes your home smarter.",
+                "price": 199.99,
+                "categories": ["IoT", "Home Automation"]
+            }
+        ],
+        "partners": [
+            {
+                "id": "PT001",
+                "name": "Global Tech Solutions",
+                "partnershipType": "Technology Partner",
+                "contact": {
+                    "name": "David Lee",
+                    "email": "david.lee@globaltech.com",
+                    "phone": "123-456-7890"
+                }
+            },
+            {
+                "id": "PT002",
+                "name": "Innovate Marketing",
+                "partnershipType": "Marketing Partner",
+                "contact": {
+                    "name": "Emma Green",
+                    "email": "emma.green@innovatemarketing.com",
+                    "phone": "987-654-3210"
+                }
+            }
+        ]
+    }
+}

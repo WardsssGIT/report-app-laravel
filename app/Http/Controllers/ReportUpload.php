@@ -105,11 +105,9 @@ public function storetemporary(Request $request)
             $report = Report_table::findOrFail($id);
 
             $validatedData = $request->validate([
-                'date_of_report' => 'required',
                 'report_type' => 'required',
-                'report_name' => 'required',
                 'department_id' => 'required',
-                'description' => 'required',
+                'reportdata' => 'required',
                 'report_pdf' =>'available',
             ]);
 
@@ -252,7 +250,6 @@ public function storetemporary(Request $request)
             return response()->json(['error' => $e->getMessage()], 404);
         }
     }
-    
 
 
 }
